@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using SocialHeap.AccountProfile;
 using SocialHeap.Profile;
 using Volo.Abp.Users;
@@ -24,9 +22,11 @@ public class AccountProfileService : SocialHeapAppService, IAccountProfileServic
     {
         var accountProfile = await _accountProfileRepository
             .GetProfileByUserAsync(_currentUser.GetId());
+        
         return new AccountProfileDto()
         {
-            AvatarUrl = accountProfile.AvatarUrl
+            AvatarUrl = accountProfile.AvatarUrl,
+            Email = _currentUser.Email
         };
     }
 }

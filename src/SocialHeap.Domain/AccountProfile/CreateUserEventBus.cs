@@ -9,8 +9,19 @@ namespace SocialHeap.Profile;
 public class CreateUserEventBus : IDistributedEventHandler<EntityCreatedEto<UserEto>>,
     ITransientDependency
 {
-    public Task HandleEventAsync(EntityCreatedEto<UserEto> eventData)
+    private readonly IAccountProfileRepository _accountProfileRepository;
+
+    public CreateUserEventBus(IAccountProfileRepository accountProfileRepository)
     {
-        return Task.CompletedTask;
+        _accountProfileRepository = accountProfileRepository;
+    }
+
+    public async Task HandleEventAsync(EntityCreatedEto<UserEto> eventData)
+    {
+        var accountProfile = new AccountProfile.AccountProfile()
+        {
+            UserId = eventData.Entity.Id
+        };
+        await _accountProfileRepository.InsertAsync(accountProfile);
     }
 }
